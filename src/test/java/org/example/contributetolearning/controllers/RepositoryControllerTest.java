@@ -28,15 +28,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(RepositoryController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(SpringExtension.class)//using spring facilities
+@WebMvcTest(RepositoryController.class) // only prepare that class for testing
+@AutoConfigureMockMvc(addFilters = false)// security disabled and got MockMvc
 public class RepositoryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    //what does mean mocking in spring?
+    //what does mean mocking in spring? -> creating a fake object to using test
 
     @MockitoBean
     private RepositoryService repositoryService;
