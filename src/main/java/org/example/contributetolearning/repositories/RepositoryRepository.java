@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface RepositoryRepository extends JpaRepository<Repository, Long> {
 
+    List<Repository> findAll();
+
 }
