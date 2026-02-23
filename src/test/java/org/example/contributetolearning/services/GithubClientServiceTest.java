@@ -18,6 +18,8 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -44,6 +46,7 @@ class GithubClientServiceTest {
         wireMockServer.stubFor(
                 get(urlPathEqualTo("/repos/octocat/Hello-World/issues"))
                         .withHeader("Authorization",equalTo("Token murat"))
+                        .withQueryParam("since",equalTo("2026-02-01"))
                         .willReturn(aResponse()
                                 .withHeader("Content-Type", "application/json")
                                 .withBodyFile("issues.json")
@@ -52,7 +55,7 @@ class GithubClientServiceTest {
 
 
         //when
-        GithubIssueResponse[] response= githubClientService.listIssues("octocat", "Hello-World");
+        GithubIssueResponse[] response= githubClientService.listIssues("octocat", "Hello-World", LocalDate.parse("2026-02-01"));
 
         //then
         then(response).isNotNull();
