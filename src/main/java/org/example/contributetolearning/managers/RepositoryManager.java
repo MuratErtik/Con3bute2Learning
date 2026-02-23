@@ -11,6 +11,10 @@ import org.example.contributetolearning.services.RepositoryService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,10 +36,17 @@ public class RepositoryManager {
     }
 
 
+    //If dont implementation manager class we would make hikari busier because transactional method would be run more!!!
+
     @Async
     public void importIssue(Repository repository) {
 
-        GithubIssueResponse[] githubIssueResponses = githubClientService.listIssues(repository.getOrganization(),repository.getRepository());
+        // it went to one day ago
+        LocalDate sinceYesterday = LocalDate.ofInstant(Instant.now().minus(1,ChronoUnit.DAYS), ZoneId.systemDefault());
+
+
+        GithubIssueResponse[] githubIssueResponses = githubClientService
+                .listIssues(repository.getOrganization(),repository.getRepository(),sinceYesterday);
 
         List<Issue> issues = Arrays.stream(githubIssueResponses).map(githubIssue -> new Issue()).toList();
 
