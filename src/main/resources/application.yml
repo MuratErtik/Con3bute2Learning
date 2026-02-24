@@ -12,3 +12,6 @@ spring:
 github:
   token: ${GITHUB_API_TOKEN}
   api-url: https://api.github.com
+
+application:
+  import-frequency: ${ISSUES_IMPORT_FREQUENCY:60000}
