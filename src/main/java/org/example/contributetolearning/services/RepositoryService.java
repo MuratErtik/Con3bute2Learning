@@ -3,6 +3,7 @@ package org.example.contributetolearning.services;
 import lombok.RequiredArgsConstructor;
 import org.example.contributetolearning.dtos.requests.CreateRepositoryRequest;
 import org.example.contributetolearning.dtos.response.GetAllRepositoryResponse;
+import org.example.contributetolearning.exceptions.DuplicatedRepositoryException;
 import org.example.contributetolearning.models.Repository;
 import org.example.contributetolearning.repositories.RepositoryRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class RepositoryService {
 
     @Transactional
     public void createRepository(CreateRepositoryRequest request) {
+
+        validateRepository(request);
 
         Repository r = Repository.builder()
                 .organization(request.getOrganization())
@@ -40,5 +43,13 @@ public class RepositoryService {
                 .name(repository.getRepository())
                 .organization(repository.getOrganization())
                 .build();
+    }
+
+    private void validateRepository(CreateRepositoryRequest request) {
+
+        repositoryRepository.findByOrganizationAndRepository(request.getOrganization(), request.getRepository())
+                .ifPresent((repository) -> {
+                    throw new DuplicatedRepositoryException(request.getOrganization(), request.getRepository());
+                });
     }
 }
